@@ -31,3 +31,10 @@ def regionesytransformacion(imagen, alto, ancho, sepvertical, sephorizontal):
     altoi = imagenconzp.shape[0]
     anchoi = imagenconzp.shape[1]
 
+    #Se crea arreglo para almacenar las regiones, es decir, cada cuadrito formado por el alto y ancho definidos, considerando el solape
+    regiones = [] 
+
+    for v in range(0, altoi - altor + 1, sepvertical):
+        for h in range(0, anchoi - anchor + 1, sephorizontal):
+            cuadrito = imagenconzp[v: v + altor, h: h + anchor] #Creamos cada cuadro del tamaño definido
+            regiones.append(cuadrito)
