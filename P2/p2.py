@@ -38,3 +38,10 @@ def regionesytransformacion(imagen, alto, ancho, sepvertical, sephorizontal):
         for h in range(0, anchoi - anchor + 1, sephorizontal):
             cuadrito = imagenconzp[v: v + altor, h: h + anchor] #Creamos cada cuadro del tamaño definido
             regiones.append(cuadrito)
+
+    #Para utilizar la fórmula de T vista en clases, definimos los parámetros M, N y L
+    dimcuadrito = regiones[0] #Tomamos un cuadrito para determinar las dimensiones (puesto que todos tienen las mismas)
+    M = dimcuadrito.shape[0] #Pixeles de alto
+    N = dimcuadrito.shape[1] #Pixeles de ancho
+    MN = M*N #Pixeles por cuadrito
+    L = 256 #Niveles de gris
