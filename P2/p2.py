@@ -54,11 +54,17 @@ def regionesytransformacion(imagen, alto, ancho, sepvertical, sephorizontal):
         T = ((L-1)/(M*N)) * sumanj #Aqui hay decimales, hay que pasarlos a enteros entre 0 y 255
         T2 = (np.round(T)).astype(np.uint8)
         transformaciones.append(T2)
-        print(T2)
 
+    cuadritosecualizados = []
+    for i in range(len(regiones)):
+        cuadritoantes = regiones[i]
+        transformacionrespectiva = transformaciones[i]
+        cuadritotransformado = transformacionrespectiva[cuadritoantes]
+        cuadritosecualizados.append(cuadritotransformado)
 
-altoi = imagen.shape[0]
-anchoi= imagen.shape[1]
-sepv = imagen.shape[0]
-seph = imagen.shape[1]
-regionesytransformacion(imagen, altoi, anchoi, altoi, anchoi )
+#debugeo
+#altoi = imagen.shape[0]
+#anchoi= imagen.shape[1]
+#sepv = imagen.shape[0]
+#seph = imagen.shape[1]
+#regionesytransformacion(imagen, altoi, anchoi, altoi, anchoi )
