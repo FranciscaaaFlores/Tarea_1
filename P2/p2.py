@@ -55,16 +55,40 @@ def regionesytransformacion(imagen, alto, ancho, sepvertical, sephorizontal):
         T2 = (np.round(T)).astype(np.uint8)
         transformaciones.append(T2)
 
+    #Creamos otro arreglo, esta vez para los cuadritos con la transformación aplicada
     cuadritosecualizados = []
     for i in range(len(regiones)):
-        cuadritoantes = regiones[i]
-        transformacionrespectiva = transformaciones[i]
-        cuadritotransformado = transformacionrespectiva[cuadritoantes]
+        cuadritoantes = regiones[i] #Tomamos cada cuadrito
+        transformacionrespectiva = transformaciones[i] #Con su respectiva transformación
+        cuadritotransformado = transformacionrespectiva[cuadritoantes] #Se le asigna a cada cuadrito el valor después de la transformación
         cuadritosecualizados.append(cuadritotransformado)
 
+    #Una vez que tenemos todos los cuadritos en el arreglo de regiones con sus nuevos valores podemos formar la imagen nuevamente
+    #Debido al solapamiento, habrán pixeles con más de un valor de intensidad, imagen1 considera esto a la vez que tenemos un arreglo cs que
+    #almacenará las veces que se le sumaron diferentes valores
+    imagen1 = np.zeros((altoi, anchoi))
+    cs = np.zeros((altoi, anchoi))
+
+    i = 0
+    for v in range(0, altoi - altor + 1, sepvertical):
+        for h in range(0, anchoi - anchor + 1, sephorizontal):
+            cuadrito = cuadritosecualizados[i]
+            imagen1[v: v + altor, h: h + anchor] += cuadrito
+            cs[v: v + altor, h: h + anchor] += 1
+            i += 1
+
+    #Se hace una "normalización" la que considera el valor de cada pixel y las veces que se incluyó para calcular diferentes regiones
+    imagen2 = imagen1 / cs
+    #Para obtener la imagen ecualizada finalmente se debe considerar la posibilidad de que se le hayan agregado pixeles por el padding, por lo que
+    #la imagen final debe tener las mismas dimensiones que la imagen original.
+    imagenecualizada = (imagen2[: imagen.shape[0], : imagen.shape[1]]).astype(np.uint8)
+
+    return imagenecualizada
+    
 #debugeo
 #altoi = imagen.shape[0]
 #anchoi= imagen.shape[1]
 #sepv = imagen.shape[0]
 #seph = imagen.shape[1]
 #regionesytransformacion(imagen, altoi, anchoi, altoi, anchoi )
+
