@@ -96,11 +96,19 @@ imagenresultado = regionesytransformacion(imagen, alto = int(altoi/4), ancho = i
 plot.figure(figsize=(10, 5))
 plot.subplot(1, 2, 1)
 plot.imshow(imagen, cmap="gray")
-plot.title("Original")
+plot.xlabel(
+    f"Alto región = {altoi}\n"
+    f"Ancho región = {anchoi}\n", fontsize=12)
+plot.title("Original", fontsize=15)
 
 plot.subplot(1, 2, 2)
 plot.imshow(imagenresultado, cmap="gray")
-plot.title("Ecualización local")
+plot.xlabel(
+    f"Alto región = {int(altoi/4)}\n"
+    f"Ancho región = {int(anchoi/4)}\n"
+    f"Sep. Vertical = {int(altoi/4)}\n"
+    f"Sep. Horizontal = {int(anchoi/4)}",  fontsize=12)
+plot.title("Ecualización local", fontsize=15)
 
 plot.tight_layout()
 plot.show()
