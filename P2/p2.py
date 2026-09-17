@@ -43,5 +43,22 @@ def regionesytransformacion(imagen, alto, ancho, sepvertical, sephorizontal):
     dimcuadrito = regiones[0] #Tomamos un cuadrito para determinar las dimensiones (puesto que todos tienen las mismas)
     M = dimcuadrito.shape[0] #Pixeles de alto
     N = dimcuadrito.shape[1] #Pixeles de ancho
-    MN = M*N #Pixeles por cuadrito
     L = 256 #Niveles de gris
+
+    #Creamos arreglo para almacenar las transformaciones de los cuadritos
+    transformaciones = []
+    for cuadrito in regiones:
+        nj = np.histogram(cuadrito, bins = 256, range=(0,256))[0]
+        sumanj = np.cumsum(nj)
+        #Fórmula vista en clases para ecualización del histograma
+        T = ((L-1)/(M*N)) * sumanj #Aqui hay decimales, hay que pasarlos a enteros entre 0 y 255
+        T2 = (np.round(T)).astype(np.uint8)
+        transformaciones.append(T2)
+        print(T2)
+
+
+altoi = imagen.shape[0]
+anchoi= imagen.shape[1]
+sepv = imagen.shape[0]
+seph = imagen.shape[1]
+regionesytransformacion(imagen, altoi, anchoi, altoi, anchoi )
