@@ -26,4 +26,8 @@ def regionesytransformacion(imagen, alto, ancho, sepvertical, sephorizontal):
     if restohorizontal != 0: #Si es que no se alcanza a completar una cantidad entera de regiones horizontales:
         padhorizontal = sephorizontal- restohorizontal #Se calcula lo necesario para completar la última región
 
-    
+    #Se crea la imagen con pixeles extra en sus bordes, en caso de haber tenido regiones exactas no se agrega nada
+    imagenconzp = np.pad(imagen, ((0, padvertical), (0, padhorizontal)), mode="reflect")
+    altoi = imagenconzp.shape[0]
+    anchoi = imagenconzp.shape[1]
+
