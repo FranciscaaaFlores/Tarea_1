@@ -1,6 +1,6 @@
 import os
 import cv2
-import matplotlib as plot
+import matplotlib.pyplot as plot
 import numpy as np
 
 ruta = os.path.join(os.path.dirname(__file__), "P2_IMG_2423.tif")
@@ -84,11 +84,23 @@ def regionesytransformacion(imagen, alto, ancho, sepvertical, sephorizontal):
     imagenecualizada = (imagen2[: imagen.shape[0], : imagen.shape[1]]).astype(np.uint8)
 
     return imagenecualizada
-    
-#debugeo
-#altoi = imagen.shape[0]
-#anchoi= imagen.shape[1]
-#sepv = imagen.shape[0]
-#seph = imagen.shape[1]
-#regionesytransformacion(imagen, altoi, anchoi, altoi, anchoi )
 
+#________________________gráfica____________________________________________
+
+#En caso de que se quiera la ecualización global clásica, se entregan como parámetos de la función altoi/anchoi/sepv/seph
+altoi = imagen.shape[0] 
+anchoi= imagen.shape[1]
+sepv = imagen.shape[0]
+seph = imagen.shape[1]
+imagenresultado = regionesytransformacion(imagen, alto = int(altoi/4), ancho = int(anchoi/4), sepvertical= int(altoi/4), sephorizontal=  int(anchoi/4))
+plot.figure(figsize=(10, 5))
+plot.subplot(1, 2, 1)
+plot.imshow(imagen, cmap="gray")
+plot.title("Original")
+
+plot.subplot(1, 2, 2)
+plot.imshow(imagenresultado, cmap="gray")
+plot.title("Ecualización local")
+
+plot.tight_layout()
+plot.show()
