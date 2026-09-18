@@ -2,13 +2,21 @@ import os
 import cv2
 import matplotlib.pyplot as plot
 import numpy as np
+#Para experimentación y análisis se incluyeron las siguientes dos librerías para experimentar con otras imágenes.
+from skimage import data
+from skimage.io import imsave
 
 ruta = os.path.join(os.path.dirname(__file__), "P1_IMG_2402.tif")
 imagen = cv2.imread(ruta) #En BGR
 imagenrgb = cv2.cvtColor(imagen, cv2.COLOR_BGR2RGB)
 
+imageneya= data.rocket() #en rgb
+
 #Definimos la función solicitada, con los parámetros: imagenrgb, los puntos de contro y el modo (HS o CIE lch)
 def ColorSaturation(imagenrgb, puntosdecontrol, modo):
+    def g_m(parametro, mh):
+        return parametro * mh
+    
     #Primero es necesario tratar los puntos de control, para poder interpolar entre ellos. Esta es la interpolación lineal pedida en el enunciado.
     def interpolacion(valoresh, puntosdecontrol):
         puntos = sorted(puntosdecontrol) #Ordenamos la lista de puntos de control
@@ -76,7 +84,8 @@ def ColorSaturation(imagenrgb, puntosdecontrol, modo):
         S = (imagenenhsv[:, :, 1]).astype(np.float32)/ 255 #Lo normalice para que quedará en valor de 0 a 1 y luego multiplicar por el m correspondiente
         V = imagenenhsv[:, :, 2] #No se toca, se mantiene sin modificación
         mh = interpolacion(H, puntosdecontrol)
-        S2 = (np.clip(S*mh, 0, 1)) * 255 #Luego de multiplicar por m, np.clip controla que se respete el mínimo y el máximo (0 y 1). 
+        Sg = g_m(S, mh)
+        S2 = (np.clip(Sg, 0, 1)) * 255 #Luego de multiplicar por m, np.clip controla que se respete el mínimo y el máximo (0 y 1). 
         HSV2 = cv2.merge([(H/2).astype(np.uint8) , S2.astype(np.uint8) , V]) #Volvemos a formar la imagen, ahora con los nuevos valores para el componente saturación.
         resultado = cv2.cvtColor(HSV2, cv2.COLOR_HSV2RGB)
 
@@ -96,22 +105,27 @@ def ColorSaturation(imagenrgb, puntosdecontrol, modo):
         #arctan2 devuelve valores entre -180 y 180° por lo que el mod 360 permite obtener valores dentro del rango para h 0 a 360.
 
         mh = interpolacion(h, puntosdecontrol)
-
-        a2 = np.clip((a * mh) + 128, 0, 255).astype(np.uint8)
-        b2 = np.clip((b * mh) + 128, 0, 255).astype(np.uint8)
+        ag = g_m(a, mh)
+        bg = g_m(b, mh)
+        a2 = np.clip(ag + 128, 0, 255).astype(np.uint8)
+        b2 = np.clip(bg + 128, 0, 255).astype(np.uint8)
         Lab2 = cv2.merge([L, a2, b2]) #Volvemos a formar la imagen, ahora con los nuevos valores.
         resultado = cv2.cvtColor(Lab2, cv2.COLOR_LAB2RGB)
 
     return resultado
 #_____________________________________prueba y gráfica________________
 
-puntos = [(120, 0.1), (240, 0.8), (360, 0.5)] 
-p1 = ColorSaturation(imagenrgb, puntos, modo="HS")
-p2 = ColorSaturation(imagenrgb, puntos, modo="CIELch")
+puntos = [(0, 0.2), (50, 0.2), (100, 0.2), (130, 2), (180, 2), (240, 2), (300, 2), (340, 0.2)] 
+#p1 = ColorSaturation(imagenrgb, puntos, modo="HS")
+#p2 = ColorSaturation(imagenrgb, puntos, modo="CIELch")
+
+p1 = ColorSaturation(imageneya, puntos, modo="HS")
+p2 = ColorSaturation(imageneya, puntos, modo="CIELch")
 
 plot.figure(figsize=(12, 4))
 plot.subplot(1, 3, 1)
-plot.imshow(imagenrgb)
+#plot.imshow(imagenrgb)
+plot.imshow(imageneya)
 plot.title("Original RGB")
 
 plot.subplot(1, 3, 2)
