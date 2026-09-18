@@ -14,20 +14,37 @@ imagenegrises= cv2.cvtColor(imagen2, cv2.COLOR_RGB2GRAY)
 
 print(imagenrgb.shape) #Vemos que la imagen rgb tiene de salida (1908, 1827, 3) indicando los 3 canales 
 print(imagenegrises.shape) #Vemos que la imagen en escala de grises tiene de salida (427, 640) 
-
 def reescalaeinterpola(imagen, s, modo):
     #Debemos tratar el caso en que la imagen de entrada sea rgb o este en escala de grises. Sabemos que una imagen RGB esta formada ppor 3 matrices
     #(R, G y B) mientras que las imagenes en escala de grises no poseen estas 3 matrices sino una sola con los valores de intensidad del gris de 0 a 255
     #podemos utilizar .shape para saber cómo es la imagen de entrada.
-    if len(imagen.shape) == 3: #Imagen RGB
-        altoi = imagen.shape[0]
-        anchoi = imagen.shape[1]
 
-    elif len(imagen.shape) == 2: #Imagen en escala de grises
-        altoi = imagen.shape[0]
-        anchoi = imagen.shape[1]
+    altoi = imagen.shape[0]
+    anchoi = imagen.shape[1]
+    nuevoalto = int(altoi * s) #int para asegurar que tanto alto y ancho sean enteros
+    nuevoancho = int(anchoi * s)
 
-    return imagen
+    #De la clase de operatoria de imágenes e interpolación, si queremos hacer una transformación de escalamiento
+    #x' = s * x , y' = s * y
+    if modo == "VMC": #Interpolación vecino más cercano
+        if len(imagen.shape) == 3: #Imagen RGB
+            #Su imagen de salida tiene forma (nuevoalto, nuevoancho, 3)
+            imagensalida= np.zeros((nuevoalto, nuevoancho, 3), np.uint8)
+
+        elif len(imagen.shape) == 2: #Imagen en escala de grises
+            #Su imagen de salida tiene forma (nuevoalto, nuevoancho)
+            imagensalida= np.zeros((nuevoalto, nuevoancho), np.uint8)
+
+    elif modo == "Bilineal":#Interpolación bilineal
+        if len(imagen.shape) == 3: #Imagen RGB
+            #Su imagen de salida tiene forma (nuevoalto, nuevoancho, 3)
+            imagensalida= np.zeros((nuevoalto, nuevoancho, 3), np.uint8)
+
+        elif len(imagen.shape) == 2: #Imagen en escala de grises
+            #Su imagen de salida tiene forma (nuevoalto, nuevoancho)
+            imagensalida= np.zeros((nuevoalto, nuevoancho), np.uint8)
+
+    return imagensalida
 
 #plot.figure(figsize=(12, 4))
 #plot.imshow(imageng2, cmap = "gray")
