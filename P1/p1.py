@@ -68,4 +68,23 @@ def ColorSaturation(imagenrgb, puntosdecontrol, modo):
             interpolar = np.interp(valoresh, h, vm)
             return interpolar
 
+    #Ahora podemos pasar a los modos: para el modo HS usaré el modelo de color HSV.
+    if modo == "HS":
+        imagenenhsv = cv2.cvtColor(imagenrgb, cv2.COLOR_RGB2HSV)
+        #Separamos los componentes de la imagen en Hue, Saturation y Value, para luego centrarnos en H y S.
+        H = (imagenenhsv[:, :, 0]).astype(np.float32) * 2 #Se organiza como filas, columnas y canales
+        S = (imagenenhsv[:, :, 1]).astype(np.float32)/ 255 #Lo normalice para que quedará en valor de 0 a 1 y luego multiplicar por el m correspondiente
+        V = imagenenhsv[:, :, 2] #No se toca, se mantiene sin modificación
+        print(H.max())
+        print(S.max())
+        mh = interpolacion(H, puntosdecontrol)
+        S2 = (np.clip(S*mh, 0, 1)) * 255 #Luego de multiplicar por m, np.clip controla que se respete el mínimo y el máximo (0 y 1). 
+        HSV2 = cv2.merge([(H/2).astype(np.uint8) , S2.astype(np.uint8) , V]) #Volvemos a formar la imagen, ahora con los nuevos valores para el componente saturación.
+        resultado = cv2.cvtColor(HSV2, cv2.COLOR_HSV2RGB)
+
+
+ColorSaturation(imagenrgb, [(180, 0.8)], "HS")
+
+    
+
 
