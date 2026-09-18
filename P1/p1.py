@@ -7,7 +7,65 @@ ruta = os.path.join(os.path.dirname(__file__), "P1_IMG_2402.tif")
 imagen = cv2.imread(ruta) #En BGR
 imagenrgb = cv2.cvtColor(imagen, cv2.COLOR_BGR2RGB)
 
-print(imagenrgb)
-plot.figure(figsize=(10, 5))
-plot.imshow(imagenrgb)
-plot.show()
+#Definimos la función solicitada, con los parámetros: imagenrgb, los puntos de contro y el modo (HS o CIE lch)
+def ColorSaturation(imagenrgb, puntosdecontrol, modo):
+    #Primero es necesario tratar los puntos de control, para poder interpolar entre ellos. Esta es la interpolación lineal pedida en el enunciado.
+    def interpolacion(valoresh, puntosdecontrol):
+        puntos = sorted(puntosdecontrol) #Ordenamos la lista de puntos de control
+        #Creamos dos arreglos para almacenar los valores de h y m respectivamente
+        h = []
+        m = []
+
+        #Recorremos los puntos de control, guardando el primer valor en el arreglo h y el segundo en el arreglo de m
+        for p in puntos:
+            h.append(p[0])
+            m.append(p[1])
+
+        #Hay que considerar los puntos de los extremos para interpolar, en donde además hay que tener en cuenta la transición del rojo de 360 a 0.
+        #Ej: en el caso de que se tuviera en 350 0.8 y en 10 0.1, se debe determinar el valor en 360/0, que esta a mitad de camino entre ambos. En este caso
+        #particular, el valor en 360/0 corresponde al promedio de los 2 m (0.8 y 0.1). 
+        #Si consideramos x los valores de los angulos e y los valores de m, la pendiente queda p = m1 - m2 / (a1 - a2), en donde lo de abajo corresponde
+        #a la distancia entre los angulos, en el caso de antes sería 360 - 350 = 10 + 10 - 0 = 10, = 20 grados. Para cualquier punto entonces sería
+        #p = m1 - m2 / ((360 - a2) + a1). Ya que se sabe cuanto va cambiando la pendiente a medida que avanzan los grados, podemos encontrar la pendiente
+        #en 360/0 como pb = m2 + p (360 - a2). 
+
+        #Lo anterior aplica solo si tenemos más de 1 punto de control:
+        if len(puntosdecontrol) > 1:
+            if h[0] > 0 and h[-1] < 360:
+                a2 = h[-1]
+                a1 = h[0]
+                m2 = m[-1]
+                m1 = m[0]
+
+                d = (360 - a2) + a1
+                p = (m1 - m2)/ d
+                pb = m2 + p * (360 - a2)
+
+                h.insert(0, 0.0)
+                m.insert(0, pb)
+                h.append(360)
+                m.append(pb)
+
+            elif h[0] == 0:#En el caso de que justo se ingrese un m para 0, ese m se copia para 360
+                pb = m[0]
+                h.append(360)
+                m.append(pb)
+
+            elif h[-1] == 360:#En el caso de que justo se ingrese un m para 360, ese m se copia para 0
+                pb = m[-1]
+                h.insert(0, 0.0)
+                m.insert(0, pb)
+
+            interpolar = np.interp(valoresh, h, m)
+            return interpolar
+
+        else:
+            #En el caso de tener solo un punto de control, tomamos el m que nos entreguen e interpolamos de 0 a 360 con ese valor (que al final es
+            #una línea recta horizontal)
+            m = puntosdecontrol[0][1]
+            h = [0, 360]
+            vm = [m, m]
+            interpolar = np.interp(valoresh, h, vm)
+            return interpolar
+
+
