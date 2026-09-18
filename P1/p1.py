@@ -75,15 +75,40 @@ def ColorSaturation(imagenrgb, puntosdecontrol, modo):
         H = (imagenenhsv[:, :, 0]).astype(np.float32) * 2 #Se organiza como filas, columnas y canales
         S = (imagenenhsv[:, :, 1]).astype(np.float32)/ 255 #Lo normalice para que quedará en valor de 0 a 1 y luego multiplicar por el m correspondiente
         V = imagenenhsv[:, :, 2] #No se toca, se mantiene sin modificación
-        print(H.max())
-        print(S.max())
         mh = interpolacion(H, puntosdecontrol)
         S2 = (np.clip(S*mh, 0, 1)) * 255 #Luego de multiplicar por m, np.clip controla que se respete el mínimo y el máximo (0 y 1). 
         HSV2 = cv2.merge([(H/2).astype(np.uint8) , S2.astype(np.uint8) , V]) #Volvemos a formar la imagen, ahora con los nuevos valores para el componente saturación.
         resultado = cv2.cvtColor(HSV2, cv2.COLOR_HSV2RGB)
 
+    elif modo == "CIELch":
+        #Recordamos que el espacio CIE lch se obtiene a partir del espacio CIE lab, por lo que obtenemos la imagen en este último espacio.
+        imagencielab = cv2.cvtColor(imagenrgb, cv2.COLOR_RGB2LAB)
+        #Separamos los componentes de la imagen en L, a y b.
+        L = (imagencielab[:, :, 0])
+        a = (imagencielab[:, :, 1]).astype(np.float32) - 128 #En documentación de la conversión de espacios de color se indica que a y b vienen con un desfase
+        #de 128, por lo que para usarlos les restamos 128.
+        b = (imagencielab[:, :, 2]).astype(np.float32) - 128
 
-ColorSaturation(imagenrgb, [(180, 0.8)], "HS")
+        #Usamos las fórmulas vistas en clases para calcular los parámetros de CIE L*c*h* a partir del CIE L*a*b*
+        #Se pide modificar c y dejar L con h sin modificación. Para modificar c, modificaremos a y b con mh.
+        c = np.sqrt(a**2 + b**2)
+        h = np.degrees(np.arctan2(b,a)) % 360
+        #arctan2 devuelve valores entre -180 y 180° por lo que el mod 360 permite obtener valores dentro del rango para h 0 a 360.
+        print(c.max())
+        print(h.max())
+        
+        mh = interpolacion(h, puntosdecontrol)
+
+        a2 = np.clip((a * mh) + 128, 0, 255).astype(np.uint8)
+        b2 = np.clip((b * mh) + 128, 0, 255).astype(np.uint8)
+        Lab2 = cv2.merge([L, a2, b2]) #Volvemos a formar la imagen, ahora con los nuevos valores.
+        resultado = cv2.cvtColor(Lab2, cv2.COLOR_LAB2RGB)
+
+    return resultado
+
+
+ColorSaturation(imagenrgb, [(180, 0.8)], "CIELch")
+
 
     
 
