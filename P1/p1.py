@@ -115,17 +115,17 @@ def ColorSaturation(imagenrgb, puntosdecontrol, modo):
     return resultado
 #_____________________________________prueba y gráfica________________
 
-puntos = [(0, 0.2), (50, 0.2), (100, 0.2), (130, 2), (180, 2), (240, 2), (300, 2), (340, 0.2)] 
-#p1 = ColorSaturation(imagenrgb, puntos, modo="HS")
-#p2 = ColorSaturation(imagenrgb, puntos, modo="CIELch")
+puntos = [(0, 0), (50, 0), (100, 0), (130, 3), (180, 3), (240, 3), (300, 3), (340, 0)] 
+p1 = ColorSaturation(imagenrgb, puntos, modo="HS")
+p2 = ColorSaturation(imagenrgb, puntos, modo="CIELch")
 
-p1 = ColorSaturation(imageneya, puntos, modo="HS")
-p2 = ColorSaturation(imageneya, puntos, modo="CIELch")
+#p1 = ColorSaturation(imageneya, puntos, modo="HS")
+#p2 = ColorSaturation(imageneya, puntos, modo="CIELch")
 
 plot.figure(figsize=(12, 4))
 plot.subplot(1, 3, 1)
-#plot.imshow(imagenrgb)
-plot.imshow(imageneya)
+plot.imshow(imagenrgb)
+#plot.imshow(imageneya)
 plot.title("Original RGB")
 
 plot.subplot(1, 3, 2)
