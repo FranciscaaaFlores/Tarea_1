@@ -94,9 +94,7 @@ def ColorSaturation(imagenrgb, puntosdecontrol, modo):
         c = np.sqrt(a**2 + b**2)
         h = np.degrees(np.arctan2(b,a)) % 360
         #arctan2 devuelve valores entre -180 y 180° por lo que el mod 360 permite obtener valores dentro del rango para h 0 a 360.
-        print(c.max())
-        print(h.max())
-        
+
         mh = interpolacion(h, puntosdecontrol)
 
         a2 = np.clip((a * mh) + 128, 0, 255).astype(np.uint8)
@@ -105,9 +103,27 @@ def ColorSaturation(imagenrgb, puntosdecontrol, modo):
         resultado = cv2.cvtColor(Lab2, cv2.COLOR_LAB2RGB)
 
     return resultado
+#_____________________________________prueba y gráfica________________
 
+puntos = [(120, 0.1), (240, 0.8), (360, 0.5)] 
+p1 = ColorSaturation(imagenrgb, puntos, modo="HS")
+p2 = ColorSaturation(imagenrgb, puntos, modo="CIELch")
 
-ColorSaturation(imagenrgb, [(180, 0.8)], "CIELch")
+plot.figure(figsize=(12, 4))
+plot.subplot(1, 3, 1)
+plot.imshow(imagenrgb)
+plot.title("Original RGB")
+
+plot.subplot(1, 3, 2)
+plot.imshow(p1)
+plot.title("Modo HS")
+
+plot.subplot(1, 3, 3)
+plot.imshow(p2)
+plot.title("Modo CIE L*c*h*")
+
+plot.tight_layout()
+plot.show()
 
 
     
