@@ -27,66 +27,133 @@ def reescalaeinterpola(imagen, s, modo):
     #x' = s * x , y' = s * y
     #Definimos una función para la interpolación de Vecino más cercano, la cual recibe el parámetro al que se le quiere
     #aplicar la interpolación y sigue la fórmula vista en clases
-    def VCM(parametro):
+    imagenf = imagen.astype(np.float32)
+    def VCM(parametro, limite):
         if parametro - np.floor(parametro) < 0.5:
-            return int(np.floor(parametro))
+            p =  int(np.floor(parametro))
         else:
-            return int(np.floor(parametro)) + 1
+            p =  int(np.floor(parametro)) + 1
+
+        if p < 0:
+            return 0
+        if p > limite:
+            return limite
+        return p
+
 
     #Ahora implementamos una función para la interpolación bilineal, asignamos los parámetros que utilizaremos (x, y, imagen) y usamos las fórmulas vistas en clases:
     def Bilineal(x, y, imagen):
-        x1 = int(np.floor(x))
-        x2 = int(np.floor(x) + 1)
-        y1 = int(np.floor(y))
-        y2 = int(np.floor(y) + 1)
+        x = int(np.floor(x))
+        y = int(np.floor(y))
+
+        #Tuve que cambiar todos los np.clip por if/elif/else debido a que todo el programa estaba demasiado lento, se demoraba más de 6
+        # minutos en dar las dos imágenes rgb interpoladas. Se logró reducir hasta 3,75 minutos aprox con s = 2 (imagen rgb: 45 segundos en modo VMC
+        #y aprox 3 minutos en modo bilineal)
+        if x < 0:
+            x1 = 0
+        elif x > anchoi - 1:
+            x1 = anchoi - 1
+        else:
+            x1 = x
+
+        if (x + 1) < 0:
+            x2 = 0
+        elif (x + 1) > anchoi - 1:
+            x2 = anchoi - 1
+        else:
+            x2 = x + 1
+
+        if y < 0:
+            y1 = 0
+        elif y > altoi - 1:
+            y1 = altoi - 1
+        else:
+            y1 = y
+
+        if (y + 1) < 0:
+            y2 = 0
+        elif (y + 1) > altoi - 1:
+            y2 = altoi - 1
+        else:
+            y2 = y + 1
+    
         f11 = imagen[y1, x1]#Es fila, columna (entonces y, x)
         f12 = imagen[y2, x1]
         f21 = imagen[y1, x2]
         f22 = imagen[y2, x2]
-        fy1 = f11 + ((f21 - f11)/(x2 - x1)) * (x - x1)
-        fy2= f12 + ((f22 - f12)/(x2 - x1)) * (x - x1)
-        fxy = fy1 + ((fy2 - fy1)/(y2 - y1)) * (y - y1)
-    
-        return fxy
+        d1 = (x2 - x1)
+        d2 = (y2 - y1)
 
+        if d1 == 0:
+            d1 = 1
+        if d2 == 0:
+            d2 = 1
+
+        fy1 = f11 + ((f21 - f11)/d1) * (x - x1)
+        fy2= f12 + ((f22 - f12)/d1) * (x - x1)
+        fxy = fy1 + ((fy2 - fy1)/d2) * (y - y1)
+
+        if fxy < 0:
+            return 0
+        if fxy > 255:
+            return 255
+        return fxy
+    
     if modo == "VMC": #Interpolación vecino más cercano
         if len(imagen.shape) == 3: #Imagen RGB
             #Su imagen de salida tiene forma (nuevoalto, nuevoancho, 3)
             imagensalida= np.zeros((nuevoalto, nuevoancho, 3), np.uint8)
             #Recorremos los pixeles de la imagen de salida aplicando la transformación y la interpolación
             for yprima in range(nuevoalto):
+                y = VCM(yprima/s, altoi - 1)
+                if yprima % 200 == 0:
+                    print("Fila", yprima, "de", nuevoalto)
                 for xprima in range(nuevoancho):
-                    y = VCM(yprima/s)
-                    x = VCM(xprima/s)
-                    imagensalida[yprima, xprima, :] = imagen[y, x, :]
+                    x = VCM(xprima/s, anchoi - 1)
+                    imagensalida[yprima, xprima, 0] = imagen[y, x, 0]
+                    imagensalida[yprima, xprima, 1] = imagen[y, x, 1]
+                    imagensalida[yprima, xprima, 2] = imagen[y, x, 2]
 
         elif len(imagen.shape) == 2: #Imagen en escala de grises
             #Su imagen de salida tiene forma (nuevoalto, nuevoancho)
             imagensalida= np.zeros((nuevoalto, nuevoancho), np.uint8)
             for yprima in range(nuevoalto):
+                y = VCM(yprima/s, altoi - 1)
+                if yprima % 200 == 0:
+                    print("Fila", yprima, "de", nuevoalto)
                 for xprima in range(nuevoancho):
-                    y = VCM(yprima/s)
-                    x = VCM(xprima/s)
+                    x = VCM(xprima/s, anchoi -1)
                     imagensalida[yprima, xprima] = imagen[y, x]
 
     elif modo == "Bilineal":#Interpolación bilineal
         if len(imagen.shape) == 3: 
             imagensalida= np.zeros((nuevoalto, nuevoancho, 3), np.uint8)
+            R = imagenf[: , :, 0]
+            G = imagenf[: , :, 1]
+            B = imagenf[: , :, 2]
             for yprima in range(nuevoalto):
+                y = yprima / s
+                if yprima % 200 == 0:
+                    print("Fila", yprima, "de", nuevoalto)
                 for xprima in range(nuevoancho):
-                    valorinterpolado = Bilineal(xprima/s, yprima/s, imagen)
-                    imagensalida[yprima, xprima, :] = valorinterpolado
+                    x = xprima / s
+                    imagensalida[yprima, xprima, 0] = int(Bilineal(x, y, R))
+                    imagensalida[yprima, xprima, 1] = int(Bilineal(x, y, G))
+                    imagensalida[yprima, xprima, 2] = int(Bilineal(x, y, B))
 
         elif len(imagen.shape) == 2:
             imagensalida= np.zeros((nuevoalto, nuevoancho), np.uint8)
             for yprima in range(nuevoalto):
+                y = yprima / s
+                if yprima % 200 == 0:
+                    print("Fila", yprima, "de", nuevoalto)
                 for xprima in range(nuevoancho):
-                    valorinterpolado = Bilineal(xprima/s, yprima/s, imagen)
-                    imagensalida[yprima, xprima] = valorinterpolado
+                    x = xprima / s
+                    imagensalida[yprima, xprima] = int(Bilineal(x, y, imagenf))
 
     return imagensalida
 
-s = 1.5
+s = 2
 p1 = reescalaeinterpola(imagenrgb, s, "VMC")
 p2 = reescalaeinterpola(imagenrgb, s, "Bilineal")
 #p3 = reescalaeinterpola(imagenegrises, s, "VMC")
@@ -94,11 +161,15 @@ p2 = reescalaeinterpola(imagenrgb, s, "Bilineal")
 
 plot.figure(figsize=(12,10))
 
-plot.subplot(1, 2, 1)
+plot.subplot(1, 3, 1)
+plot.imshow(imagenrgb)
+plot.title("Imagen Original")
+
+plot.subplot(1, 3, 2)
 plot.imshow(p1)
 plot.title("Imagen RGB, interpolación VMC")
 
-plot.subplot(1, 2, 1)
+plot.subplot(1, 3, 3)
 plot.imshow(p2)
 plot.title("Imagen RGB, interpolación Bilineal")
 
