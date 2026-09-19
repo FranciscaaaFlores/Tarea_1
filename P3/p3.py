@@ -23,25 +23,41 @@ def reescalaeinterpola(imagen, s, modo):
     anchoi = imagen.shape[1]
     nuevoalto = int(altoi * s) #int para asegurar que tanto alto y ancho sean enteros
     nuevoancho = int(anchoi * s)
-
     #De la clase de operatoria de imágenes e interpolación, si queremos hacer una transformación de escalamiento
     #x' = s * x , y' = s * y
+    #Definimos una función para la interpolación de Vecino más cercano, la cual recibe el parámetro al que se le quiere
+    #aplicar la interpolación y sigue la fórmula vista en clases
+    def VCM(parametro):
+        if parametro - np.floor(parametro) < 0.5:
+            return int(np.floor(parametro))
+        else:
+            return int(np.floor(parametro)) + 1
+
     if modo == "VMC": #Interpolación vecino más cercano
         if len(imagen.shape) == 3: #Imagen RGB
             #Su imagen de salida tiene forma (nuevoalto, nuevoancho, 3)
             imagensalida= np.zeros((nuevoalto, nuevoancho, 3), np.uint8)
+            #Recorremos los pixeles de la imagen de salida aplicando la transformación y la interpolación
+            for yprima in range(nuevoalto):
+                for xprima in range(nuevoancho):
+                    y = VCM(yprima/s)
+                    x = VCM(xprima/s)
+                    imagensalida[yprima, xprima, :] = imagen[y, x, :]
 
         elif len(imagen.shape) == 2: #Imagen en escala de grises
             #Su imagen de salida tiene forma (nuevoalto, nuevoancho)
             imagensalida= np.zeros((nuevoalto, nuevoancho), np.uint8)
+            for yprima in range(nuevoalto):
+                for xprima in range(nuevoancho):
+                    y = VCM(yprima/s)
+                    x = VCM(xprima/s)
+                    imagensalida[yprima, xprima] = imagen[y, x]
 
     elif modo == "Bilineal":#Interpolación bilineal
-        if len(imagen.shape) == 3: #Imagen RGB
-            #Su imagen de salida tiene forma (nuevoalto, nuevoancho, 3)
+        if len(imagen.shape) == 3: 
             imagensalida= np.zeros((nuevoalto, nuevoancho, 3), np.uint8)
 
-        elif len(imagen.shape) == 2: #Imagen en escala de grises
-            #Su imagen de salida tiene forma (nuevoalto, nuevoancho)
+        elif len(imagen.shape) == 2:
             imagensalida= np.zeros((nuevoalto, nuevoancho), np.uint8)
 
     return imagensalida
