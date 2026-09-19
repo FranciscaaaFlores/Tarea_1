@@ -42,9 +42,9 @@ def reescalaeinterpola(imagen, s, modo):
 
 
     #Ahora implementamos una función para la interpolación bilineal, asignamos los parámetros que utilizaremos (x, y, imagen) y usamos las fórmulas vistas en clases:
-    def Bilineal(x, y, imagen):
-        x = int(np.floor(x))
-        y = int(np.floor(y))
+    def Bilineal(xc, yc, imagen):
+        x = int(np.floor(xc))
+        y = int(np.floor(yc))
 
         #Tuve que cambiar todos los np.clip por if/elif/else debido a que todo el programa estaba demasiado lento, se demoraba más de 6
         # minutos en dar las dos imágenes rgb interpoladas. Se logró reducir hasta 3,75 minutos aprox con s = 2 (imagen rgb: 45 segundos en modo VMC
@@ -89,9 +89,9 @@ def reescalaeinterpola(imagen, s, modo):
         if d2 == 0:
             d2 = 1
 
-        fy1 = f11 + ((f21 - f11)/d1) * (x - x1)
-        fy2= f12 + ((f22 - f12)/d1) * (x - x1)
-        fxy = fy1 + ((fy2 - fy1)/d2) * (y - y1)
+        fy1 = f11 + ((f21 - f11)/d1) * (xc - x1)
+        fy2= f12 + ((f22 - f12)/d1) * (xc - x1)
+        fxy = fy1 + ((fy2 - fy1)/d2) * (yc - y1)
 
         if fxy < 0:
             return 0
@@ -153,25 +153,41 @@ def reescalaeinterpola(imagen, s, modo):
 
     return imagensalida
 
-s = 2
+s = 0.8
 p1 = reescalaeinterpola(imagenrgb, s, "VMC")
 p2 = reescalaeinterpola(imagenrgb, s, "Bilineal")
-#p3 = reescalaeinterpola(imagenegrises, s, "VMC")
-#p4 = reescalaeinterpola(imagenegrises, s, "Bilineal")
+p3 = reescalaeinterpola(imagenegrises, s, "VMC")
+p4 = reescalaeinterpola(imagenegrises, s, "Bilineal")
+plot.figure(figsize=(12,10))
+
+plot.subplot(2, 2, (1,2))
+plot.imshow(imagenegrises, cmap="gray")
+plot.title("Imagen Original")
+
+plot.subplot(2, 2, 3)
+plot.imshow(p3, cmap="gray")
+plot.title("Imagen en escala de grises, interpolación VMC")
+
+plot.subplot(2, 2, 4)
+plot.imshow(p4, cmap="gray")
+plot.title("Imagen en escala de grises, interpolación Bilineal")
+plot.subplots_adjust(hspace=0.7)
+plot.tight_layout()
 
 plot.figure(figsize=(12,10))
 
-plot.subplot(1, 3, 1)
+plot.subplot(2, 2, (1,2))
 plot.imshow(imagenrgb)
 plot.title("Imagen Original")
 
-plot.subplot(1, 3, 2)
+plot.subplot(2, 2, 3)
 plot.imshow(p1)
 plot.title("Imagen RGB, interpolación VMC")
 
-plot.subplot(1, 3, 3)
+plot.subplot(2, 2, 4)
 plot.imshow(p2)
 plot.title("Imagen RGB, interpolación Bilineal")
 
+plot.subplots_adjust(hspace=0.4)
 plot.tight_layout()
 plot.show()

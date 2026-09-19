@@ -92,7 +92,7 @@ altoi = imagen.shape[0]
 anchoi= imagen.shape[1]
 sepv = imagen.shape[0]
 seph = imagen.shape[1]
-imagenresultado = regionesytransformacion(imagen, alto = int(altoi/4), ancho = int(anchoi/4), sepvertical= int(altoi/4), sephorizontal=  int(anchoi/4))
+imagenresultado = regionesytransformacion(imagen, alto = int(altoi/16), ancho = int(anchoi/16), sepvertical= int(altoi/32), sephorizontal=  int(anchoi/32))
 plot.figure(figsize=(10, 5))
 plot.subplot(1, 2, 1)
 plot.imshow(imagen, cmap="gray")
@@ -104,10 +104,10 @@ plot.title("Original", fontsize=15)
 plot.subplot(1, 2, 2)
 plot.imshow(imagenresultado, cmap="gray")
 plot.xlabel(
-    f"Alto región = {int(altoi/4)}\n"
-    f"Ancho región = {int(anchoi/4)}\n"
-    f"Sep. Vertical = {int(altoi/4)}\n"
-    f"Sep. Horizontal = {int(anchoi/4)}",  fontsize=12)
+    f"Alto región = {int(altoi/16)}\n"
+    f"Ancho región = {int(anchoi/16)}\n"
+    f"Sep. Vertical = {int(altoi/32)}\n"
+    f"Sep. Horizontal = {int(anchoi/32)}",  fontsize=12)
 plot.title("Ecualización local", fontsize=15)
 
 plot.tight_layout()
