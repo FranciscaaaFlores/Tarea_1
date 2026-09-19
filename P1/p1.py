@@ -77,6 +77,8 @@ def ColorSaturation(imagenrgb, puntosdecontrol, modo):
             return interpolar
 
     #Ahora podemos pasar a los modos: para el modo HS usaré el modelo de color HSV.
+    pixelx = 50
+    pixely = 50
     if modo == "HS":
         imagenenhsv = cv2.cvtColor(imagenrgb, cv2.COLOR_RGB2HSV)
         #Separamos los componentes de la imagen en Hue, Saturation y Value, para luego centrarnos en H y S.
@@ -88,6 +90,13 @@ def ColorSaturation(imagenrgb, puntosdecontrol, modo):
         S2 = (np.clip(Sg, 0, 1)) * 255 #Luego de multiplicar por m, np.clip controla que se respete el mínimo y el máximo (0 y 1). 
         HSV2 = cv2.merge([(H/2).astype(np.uint8) , S2.astype(np.uint8) , V]) #Volvemos a formar la imagen, ahora con los nuevos valores para el componente saturación.
         resultado = cv2.cvtColor(HSV2, cv2.COLOR_HSV2RGB)
+        #print(f"Valores Píxel Modo HS")
+        #print(f"1. Tono (Grados): {H[pixely, pixelx]}")
+        #print(f"2- Saturación original: {S[pixely, pixelx]}")
+        #print(f"3. Valor interpolado m(h): {mh[pixely, pixelx]}")
+        #print(f"4. Resultado gm: {Sg[pixely, pixelx]}")
+        #print(f"5. Valor RGB final: {resultado[pixely, pixelx]}")
+
 
     elif modo == "CIELch":
         #Recordamos que el espacio CIE lch se obtiene a partir del espacio CIE lab, por lo que obtenemos la imagen en este último espacio.
@@ -109,13 +118,20 @@ def ColorSaturation(imagenrgb, puntosdecontrol, modo):
         bg = g_m(b, mh)
         a2 = np.clip(ag + 128, 0, 255).astype(np.uint8)
         b2 = np.clip(bg + 128, 0, 255).astype(np.uint8)
+        cp = np.sqrt((a2-180)**2 + (b2-180)**2)
         Lab2 = cv2.merge([L, a2, b2]) #Volvemos a formar la imagen, ahora con los nuevos valores.
         resultado = cv2.cvtColor(Lab2, cv2.COLOR_LAB2RGB)
+        #print(f"Valores Píxel Modo CIE")
+        #print(f"1. Tono (Grados): {h[pixely, pixelx]}")
+        #print(f"2. c original: {c[pixely, pixelx]}")
+        #print(f"3. Valor interpolado m(h): {mh[pixely, pixelx]}")
+        #print(f"4. Resultado gm: {cp[pixely, pixelx]}")
+        #print(f"5. Valor RGB final: {resultado[pixely, pixelx]}")
 
     return resultado
 #_____________________________________prueba y gráfica________________
 
-puntos = [(0, 0), (50, 0), (100, 0), (130, 3), (180, 3), (240, 3), (300, 3), (340, 0)] 
+puntos = [(30, 2)] 
 p1 = ColorSaturation(imagenrgb, puntos, modo="HS")
 p2 = ColorSaturation(imagenrgb, puntos, modo="CIELch")
 
