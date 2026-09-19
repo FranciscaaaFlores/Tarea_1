@@ -12,8 +12,8 @@ imagenrgb = cv2.cvtColor(imagen1, cv2.COLOR_BGR2RGB)
 imagen2= data.rocket() #en rgb, la pasamos a escala de grises
 imagenegrises= cv2.cvtColor(imagen2, cv2.COLOR_RGB2GRAY)
 
-print(imagenrgb.shape) #Vemos que la imagen rgb tiene de salida (1908, 1827, 3) indicando los 3 canales 
-print(imagenegrises.shape) #Vemos que la imagen en escala de grises tiene de salida (427, 640) 
+#print(imagenrgb.shape) #Vemos que la imagen rgb tiene de salida (1908, 1827, 3) indicando los 3 canales 
+#print(imagenegrises.shape) #Vemos que la imagen en escala de grises tiene de salida (427, 640) 
 def reescalaeinterpola(imagen, s, modo):
     #Debemos tratar el caso en que la imagen de entrada sea rgb o este en escala de grises. Sabemos que una imagen RGB esta formada ppor 3 matrices
     #(R, G y B) mientras que las imagenes en escala de grises no poseen estas 3 matrices sino una sola con los valores de intensidad del gris de 0 a 255
@@ -86,7 +86,21 @@ def reescalaeinterpola(imagen, s, modo):
 
     return imagensalida
 
-#plot.figure(figsize=(12, 4))
-#plot.imshow(imageng2, cmap = "gray")
-#plot.title("Original")
-#plot.show()
+s = 1.5
+p1 = reescalaeinterpola(imagenrgb, s, "VMC")
+p2 = reescalaeinterpola(imagenrgb, s, "Bilineal")
+#p3 = reescalaeinterpola(imagenegrises, s, "VMC")
+#p4 = reescalaeinterpola(imagenegrises, s, "Bilineal")
+
+plot.figure(figsize=(12,10))
+
+plot.subplot(1, 2, 1)
+plot.imshow(p1)
+plot.title("Imagen RGB, interpolación VMC")
+
+plot.subplot(1, 2, 1)
+plot.imshow(p2)
+plot.title("Imagen RGB, interpolación Bilineal")
+
+plot.tight_layout()
+plot.show()
