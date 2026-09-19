@@ -33,6 +33,22 @@ def reescalaeinterpola(imagen, s, modo):
         else:
             return int(np.floor(parametro)) + 1
 
+    #Ahora implementamos una función para la interpolación bilineal, asignamos los parámetros que utilizaremos (x, y, imagen) y usamos las fórmulas vistas en clases:
+    def Bilineal(x, y, imagen):
+        x1 = int(np.floor(x))
+        x2 = int(np.floor(x) + 1)
+        y1 = int(np.floor(y))
+        y2 = int(np.floor(y) + 1)
+        f11 = imagen[y1, x1]#Es fila, columna (entonces y, x)
+        f12 = imagen[y2, x1]
+        f21 = imagen[y1, x2]
+        f22 = imagen[y2, x2]
+        fy1 = f11 + ((f21 - f11)/(x2 - x1)) * (x - x1)
+        fy2= f12 + ((f22 - f12)/(x2 - x1)) * (x - x1)
+        fxy = fy1 + ((fy2 - fy1)/(y2 - y1)) * (y - y1)
+    
+        return fxy
+
     if modo == "VMC": #Interpolación vecino más cercano
         if len(imagen.shape) == 3: #Imagen RGB
             #Su imagen de salida tiene forma (nuevoalto, nuevoancho, 3)
@@ -56,9 +72,17 @@ def reescalaeinterpola(imagen, s, modo):
     elif modo == "Bilineal":#Interpolación bilineal
         if len(imagen.shape) == 3: 
             imagensalida= np.zeros((nuevoalto, nuevoancho, 3), np.uint8)
+            for yprima in range(nuevoalto):
+                for xprima in range(nuevoancho):
+                    valorinterpolado = Bilineal(xprima/s, yprima/s, imagen)
+                    imagensalida[yprima, xprima, :] = valorinterpolado
 
         elif len(imagen.shape) == 2:
             imagensalida= np.zeros((nuevoalto, nuevoancho), np.uint8)
+            for yprima in range(nuevoalto):
+                for xprima in range(nuevoancho):
+                    valorinterpolado = Bilineal(xprima/s, yprima/s, imagen)
+                    imagensalida[yprima, xprima] = valorinterpolado
 
     return imagensalida
 
