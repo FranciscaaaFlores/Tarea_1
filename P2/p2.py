@@ -8,7 +8,7 @@ imagen = cv2.imread(ruta, cv2.IMREAD_GRAYSCALE)
 
 #La función va a recibir la imagen, el alto y ancho de la región que se desea y la separación vertical y horizontal entre cada región.
 #La separación se considera desde el borde de cada cuadrito
-def regionesytransformacion(imagen, alto, ancho, sepvertical, sephorizontal):
+def regionesytransformacion(imagen, alto, ancho, sepvertical, sephorizontal, parametro):
     altoi = imagen.shape[0]
     anchoi = imagen.shape[1]
     altor = alto
@@ -46,13 +46,18 @@ def regionesytransformacion(imagen, alto, ancho, sepvertical, sephorizontal):
     L = 256 #Niveles de gris
 
     #Creamos arreglo para almacenar las transformaciones de los cuadritos
+
+    identidad = np.arange(256)
     transformaciones = []
     for cuadrito in regiones:
-        nj = np.histogram(cuadrito, bins = 256, range=(0,256))[0]
+        nj = np.histogram(cuadrito, bins = 256, range=(0, 256))[0]
         sumanj = np.cumsum(nj)
         #Fórmula vista en clases para ecualización del histograma
         T = ((L-1)/(M*N)) * sumanj #Aqui hay decimales, hay que pasarlos a enteros entre 0 y 255
-        T2 = (np.round(T)).astype(np.uint8)
+        Tm = T * parametro + (1 - parametro) * identidad #Aquí se implementó el mecanismo de control de contraste
+        #en donde si parametro = 0, obtenemos la imagen original sin cambios, y parametro = 1 es la imagen
+        #ecualizada totalmente.
+        T2 = (np.round(Tm)).astype(np.uint8)
         transformaciones.append(T2)
 
     #Creamos otro arreglo, esta vez para los cuadritos con la transformación aplicada
@@ -92,7 +97,7 @@ altoi = imagen.shape[0]
 anchoi= imagen.shape[1]
 sepv = imagen.shape[0]
 seph = imagen.shape[1]
-imagenresultado = regionesytransformacion(imagen, alto = int(altoi/16), ancho = int(anchoi/16), sepvertical= int(altoi/32), sephorizontal=  int(anchoi/32))
+imagenresultado = regionesytransformacion(imagen, alto = int(altoi/16), ancho = int(anchoi/16), sepvertical= int(altoi/128), sephorizontal=  int(anchoi/128), parametro= 0.8)
 plot.figure(figsize=(10, 5))
 plot.subplot(1, 2, 1)
 plot.imshow(imagen, cmap="gray")
@@ -106,8 +111,9 @@ plot.imshow(imagenresultado, cmap="gray")
 plot.xlabel(
     f"Alto región = {int(altoi/16)}\n"
     f"Ancho región = {int(anchoi/16)}\n"
-    f"Sep. Vertical = {int(altoi/32)}\n"
-    f"Sep. Horizontal = {int(anchoi/32)}",  fontsize=12)
+    f"Sep. Vertical = {int(altoi/128)}\n"
+    f"Sep. Horizontal = {int(anchoi/128)}\n"
+    "Mezcla transformación con identidad = 0.8",  fontsize=12)
 plot.title("Ecualización local", fontsize=15)
 
 plot.tight_layout()
