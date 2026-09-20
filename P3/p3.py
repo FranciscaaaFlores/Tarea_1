@@ -153,11 +153,14 @@ def reescalaeinterpola(imagen, s, modo):
 
     return imagensalida
 
-s = 0.8
-p1 = reescalaeinterpola(imagenrgb, s, "VMC")
-p2 = reescalaeinterpola(imagenrgb, s, "Bilineal")
+s = 0.5
+#p1 = reescalaeinterpola(imagenrgb, s, "VMC")
+#2 = reescalaeinterpola(imagenrgb, s, "Bilineal")
 p3 = reescalaeinterpola(imagenegrises, s, "VMC")
 p4 = reescalaeinterpola(imagenegrises, s, "Bilineal")
+s2 = 2
+p5 = reescalaeinterpola(p3, s2, "VMC")
+p6 = reescalaeinterpola(p4, s2, "Bilineal")
 plot.figure(figsize=(12,10))
 
 plot.subplot(2, 2, (1,2))
@@ -165,28 +168,28 @@ plot.imshow(imagenegrises, cmap="gray")
 plot.title("Imagen Original")
 
 plot.subplot(2, 2, 3)
-plot.imshow(p3, cmap="gray")
+plot.imshow(p5, cmap="gray")
 plot.title("Imagen en escala de grises, interpolación VMC")
 
 plot.subplot(2, 2, 4)
-plot.imshow(p4, cmap="gray")
+plot.imshow(p6, cmap="gray")
 plot.title("Imagen en escala de grises, interpolación Bilineal")
 plot.subplots_adjust(hspace=0.7)
 plot.tight_layout()
 
 plot.figure(figsize=(12,10))
 
-plot.subplot(2, 2, (1,2))
-plot.imshow(imagenrgb)
-plot.title("Imagen Original")
+#plot.subplot(2, 2, (1,2))
+#plot.imshow(imagenrgb)
+#plot.title("Imagen Original")
 
-plot.subplot(2, 2, 3)
-plot.imshow(p1)
-plot.title("Imagen RGB, interpolación VMC")
+#plot.subplot(2, 2, 3)
+#plot.imshow(p1)
+#plot.title("Imagen RGB, interpolación VMC")
 
-plot.subplot(2, 2, 4)
-plot.imshow(p2)
-plot.title("Imagen RGB, interpolación Bilineal")
+#plot.subplot(2, 2, 4)
+#plot.imshow(p2)
+#plot.title("Imagen RGB, interpolación Bilineal")
 
 plot.subplots_adjust(hspace=0.4)
 plot.tight_layout()
