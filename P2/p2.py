@@ -5,12 +5,12 @@ import numpy as np
 from skimage import data
 
 ruta = os.path.join(os.path.dirname(__file__), "P2_IMG_2423.tif")
-imagen = cv2.imread(ruta, cv2.IMREAD_GRAYSCALE)
+#imagen = cv2.imread(ruta, cv2.IMREAD_GRAYSCALE)
 imagenr= data.astronaut() #en rgb
-#imagen= cv2.cvtColor(imagenr, cv2.COLOR_RGB2GRAY)
+imagen= cv2.cvtColor(imagenr, cv2.COLOR_RGB2GRAY)
 clahe = cv2.createCLAHE(clipLimit= 4, tileGridSize=(16, 16))
 imagenconCLAHE= clahe.apply(imagen)
-
+regionhomogenea = imagen[0:300, 300:500] #en la astronauta es la zona del casco y el mueble de atrás
 #La función va a recibir la imagen, el alto y ancho de la región que se desea y la separación vertical y horizontal entre cada región.
 #La separación se considera desde el borde de cada cuadrito
 def regionesytransformacion(imagen, alto, ancho, sepvertical, sephorizontal, parametro):
@@ -150,6 +150,19 @@ plot.imshow(imagenconCLAHE, cmap="gray")
 plot.title("Imagen con CLAHE", fontsize=10)
 plot.xlabel("clipLimit = 4",  fontsize=8)
 
+#nj, bins = np.histogram(regionhomogenea.flatten(), bins=256, range=(0, 256))
+#cdf= np.cumsum(nj)
 
-plot.tight_layout()
+#plot.figure(figsize=(8, 4))
+#plot.bar(bins[:-1], nj)
+#plot.title("Histograma")
+#plot.show()
+
+#plot.figure(figsize=(8, 4))
+#plot.plot(cdf, label ="CDF")
+#plot.legend()
+#plot.show()
+
+
+#plot.tight_layout()
 plot.show()
