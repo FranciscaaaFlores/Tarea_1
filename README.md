@@ -1,6 +1,5 @@
 # T1 - Fundamentos de Procesamiento de Imágenes
-En este repositorios se encuentran 3 carpetas (P1, P2, P3), en las cuales se encuentra un archivo .py que contiene el código. No se ha realizado la pregunta 4.
-con los respectivos comentarios asociados a cada parte y el archivo (imagen) que se subió en canvas para cada pregunta. 
+En este repositorios se encuentran 3 carpetas (P1, P2, P3), en las cuales se encuentra un archivo .py que contiene el código con los respectivos comentarios asociados a cada parte y el archivo (imagen) que se subió en canvas para cada pregunta. No se ha realizado la pregunta 4.
 
 Cabe recalcar que los códigos no cuentan con interfaz gráfica, por lo que para modificar los parámetros y llamar a las funciones se encuentran las líneas correspondientes en donde se pueden modificar sus valores. 
 
@@ -19,7 +18,6 @@ Para usarlo se pueden utilizar las imágenes que vienen dentro del código (que 
 
 ### Resultados:
 La salida del código es un Plot con 3 imágenes (Original, Modo HS, Modo CIE L*c*h*). 
-
 
 ## P2 (Pregunta 2 — Ecualización local y control de contraste)
 Esta pregunta implementa un algoritmo de ecualización local de histograma para imágenes en escala de grises. Para hacer la ecualización local se definen mallas, es decir, se divide la imagen en regiones pequeñas, las que pueden solaparse o no. Es capaz de reproducir la ecualización global clásica si se entregan los parámetros adecuados (se especifica más abajo). 
@@ -68,4 +66,3 @@ Para usarlo se pueden utilizar las imágenes que vienen dentro del código (que 
 ### Resultados:
 La salida de este código son 2 ventanas diferentes con 3 plots cada una. La primera ventana reproduce las 3 imágenes asociadas a la imagen RGB (Original, Interpolación vecino más cercano, Interpolación Bilineal). La segunda ventana reproduce las 3 imágenes asociadas a la imagen en escala de grises (Original, Interpolación vecino más cercano, Interpolación Bilineal). 
 Dentro del código se implementaron unos print (que se encuentran comentados, en la función de interpolación bilineal) que fueron utilizados en una sección de preguntas guiadas. Si se descomentan estos generan como salida los valores para un píxel determinado, indicando coordenada de salida, coordenada de entrada, cuatro vecinos y valor interpolado. El píxel puede ser modificado en la línea correspondiente. 
-
