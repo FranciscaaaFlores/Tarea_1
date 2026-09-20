@@ -50,3 +50,22 @@ Además, se encuentran comentados otros resultados desarrollados durante la impl
 Además, también se encuentra comentado el plot de un histograma y un gráfico de CDF. Esto se utilizó para analizar una sección homogénea de la imagen, por lo que si se quisiera usar se debe descomentar ambos gráficos y seleccionar la sección de imagen que se quiere analizar con estos gráficos. La salida es:
 1. Histograma con la distrubución de los pixeles de la región a lo largo de los 255 niveles de gris.
 2. Plot de CDF, con la suma acumulada del histograma a lo largo de los 255 niveles de gris.
+
+
+## P3 (Pregunta 3 — Reescalado e interpolación bilineal)
+En esta pregunta se implementa una función para reescalar una imagen mediante un factor s, lo que implica que se puede hacer una reducción o ampliación de la imagen. 
+
+En esta pregunta se implementa la función reescalaeinterpola(imagen, s, modo), la que recibe 3 parámetros:
+1. **"imagen"**: Una imagen en formato RGB o en escala de grises.
+2. **"s"**: Un factor real s, que según lo indicado en la tarea se debe encontrar entre 0.5 y 2, sin embargo se hicieron pruebas con otros valores de s también. No hay problemas de código con menores a 0.5, pero entre mayor es S el tiempo de
+ejecución de todo el programa es mucho mayor. Con respecto a esto, se han incluido unos print que indican en que fila de
+la imagen va la implementación, de manera que se puede confirmar que se está ejecutando mientras se ve como progresa.
+3. **"modo"**: Tipo de interpolación deseada, tiene dos opciones: "VMC" (Vecino más cercano) o "Bilineal" (interpolación bilineal.
+
+### Cómo usar:
+Para usarlo se pueden utilizar las imágenes que vienen dentro del código (que es el archivo de la T1 o bien una imagen de ski image, que en el caso del código se uso para comprobar el funcionamiento en imagenes de escala de grises). Basta con llamar a la función con los parámetros indicados para reproducir los resultados. 
+
+### Resultados:
+La salida de este código son 2 ventanas diferentes con 3 plots cada una. La primera ventana reproduce las 3 imágenes asociadas a la imagen RGB (Original, Interpolación vecino más cercano, Interpolación Bilineal). La segunda ventana reproduce las 3 imágenes asociadas a la imagen en escala de grises (Original, Interpolación vecino más cercano, Interpolación Bilineal). 
+Dentro del código se implementaron unos print (que se encuentran comentados, en la función de interpolación bilineal) que fueron utilizados en una sección de preguntas guiadas. Si se descomentan estos generan como salida los valores para un píxel determinado, indicando coordenada de salida, coordenada de entrada, cuatro vecinos y valor interpolado. El píxel puede ser modificado en la línea correspondiente. 
+
