@@ -22,6 +22,8 @@ La salida del código es un Plot con 3 imágenes (Original, Modo HS, Modo CIE L*
 
 
 ## P2 (Pregunta 2 — Ecualización local y control de contraste)
+Esta pregunta implementa un algoritmo de ecualización local de histograma para imágenes en escala de grises. Para hacer la ecualización local se definen mallas, es decir, se divide la imagen en regiones pequeñas, las que pueden solaparse o no. Es capaz de reproducir la ecualización global clásica si se entregan los parámetros adecuados (se especifica más abajo). 
+Además, implementa un mecanismo de control de contraste que combina las transformaciones con la identidad. 
 
 En esta pregunta se implementa la función regionesytransformacion(imagen, alto, ancho, sepvertical, sephorizontal, parametro), la cual recibe 6 parámetros:
 1. **"imagen"**: Una imagen en escala de grises.
@@ -44,3 +46,7 @@ Además, se encuentran comentados otros resultados desarrollados durante la impl
 5. Imagen con mecanismo de contraste (en la que se pueden modificar sus regiones, parámetro distinto de 1)
 6. Imagen con CLAHE (la tarea mencionaba que se podía usar implementar con fines comparativos únicamente, por lo que
    solo se usa con este propósito). Se puede modificar su clipLimit y el tamaño de las regiones.
+
+Además, también se encuentra comentado el plot de un histograma y un gráfico de CDF. Esto se utilizó para analizar una sección homogénea de la imagen, por lo que si se quisiera usar se debe descomentar ambos gráficos y seleccionar la sección de imagen que se quiere analizar con estos gráficos. La salida es:
+1. Histograma con la distrubución de los pixeles de la región a lo largo de los 255 niveles de gris.
+2. Plot de CDF, con la suma acumulada del histograma a lo largo de los 255 niveles de gris.
