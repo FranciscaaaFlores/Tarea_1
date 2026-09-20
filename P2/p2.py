@@ -8,8 +8,8 @@ ruta = os.path.join(os.path.dirname(__file__), "P2_IMG_2423.tif")
 #imagen = cv2.imread(ruta, cv2.IMREAD_GRAYSCALE)
 imagenr= data.astronaut() #en rgb
 imagen= cv2.cvtColor(imagenr, cv2.COLOR_RGB2GRAY)
-clahe = cv2.createCLAHE(clipLimit= 4, tileGridSize=(16, 16))
-imagenconCLAHE= clahe.apply(imagen)
+#clahe = cv2.createCLAHE(clipLimit= 4, tileGridSize=(16, 16))
+#imagenconCLAHE= clahe.apply(imagen)
 regionhomogenea = imagen[0:300, 300:500] #en la astronauta es la zona del casco y el mueble de atrás
 #La función va a recibir la imagen, el alto y ancho de la región que se desea y la separación vertical y horizontal entre cada región.
 #La separación se considera desde el borde de cada cuadrito
@@ -106,49 +106,49 @@ imagenecglobal = regionesytransformacion(imagen, altoi, anchoi, altoi, anchoi, p
 imagenresultado = regionesytransformacion(imagen, alto = int(altoi/16), ancho = int(anchoi/16), sepvertical= int(altoi/128), sephorizontal=  int(anchoi/128), parametro= 1)
 imagenmc = regionesytransformacion(imagen, alto = int(altoi/16), ancho = int(anchoi/16), sepvertical= int(altoi/128), sephorizontal=  int(anchoi/128), parametro= 0.3)
 plot.figure(figsize=(10, 5))
-#plot.subplot(1, 2, 1)
-plot.subplot(2, 3, 1)
+plot.subplot(1, 2, 1)
+#plot.subplot(2, 3, 1)
 plot.imshow(imagen, cmap="gray")
-#plot.xlabel(
-#    f"Alto región = {altoi}\n"
-#    f"Ancho región = {anchoi}\n", fontsize=12)
+plot.xlabel(
+    f"Alto región = {altoi}\n"
+    f"Ancho región = {anchoi}\n", fontsize=12)
 plot.title("Original", fontsize=10)
 
-plot.subplot(2, 3, 2)
-plot.imshow(imagenecglobal, cmap="gray")
+#plot.subplot(2, 3, 2)
+#plot.imshow(imagenecglobal, cmap="gray")
 #plot.xlabel(
 #    f"Alto región = {int(altoi/16)}\n"
 #    f"Ancho región = {int(anchoi/16)}\n"
 #    f"Sep. Vertical = {int(altoi/128)}\n"
 #    f"Sep. Horizontal = {int(anchoi/128)}\n"
 #    "Mezcla transformación con identidad = 0.8",  fontsize=12)
-plot.title("Ecualización Global Clásica", fontsize=10)
+#plot.title("Ecualización Global Clásica", fontsize=10)
 
-#plot.subplot(1, 2, 2)
-plot.subplot(2, 3, 3)
+plot.subplot(1, 2, 2)
+#plot.subplot(2, 3, 3)
 plot.imshow(imagenresultado, cmap="gray")
 plot.xlabel(
-#    f"Alto región = {int(altoi/16)}\n"
-#    f"Ancho región = {int(anchoi/16)}\n"
-#    f"Sep. Vertical = {int(altoi/128)}\n"
-#    f"Sep. Horizontal = {int(anchoi/128)}\n"
+    f"Alto región = {int(altoi/16)}\n"
+    f"Ancho región = {int(anchoi/16)}\n"
+    f"Sep. Vertical = {int(altoi/128)}\n"
+    f"Sep. Horizontal = {int(anchoi/128)}\n"
     "Parámetro = 1",  fontsize=8)
 plot.title("Ecualización local", fontsize=10)
 
-plot.subplot(2, 3, 4)
-plot.imshow(imagenmc, cmap="gray")
-plot.xlabel(
+#plot.subplot(2, 3, 4)
+#plot.imshow(imagenmc, cmap="gray")
+#plot.xlabel(
 #    f"Alto región = {int(altoi/16)}\n"
 #    f"Ancho región = {int(anchoi/16)}\n"
 #    f"Sep. Vertical = {int(altoi/128)}\n"
 #    f"Sep. Horizontal = {int(anchoi/128)}\n"
-    "Parámetro = 0.3",  fontsize=8)
-plot.title("Ecualización local", fontsize=10)
+#    "Parámetro = 0.3",  fontsize=8)
+#plot.title("Ecualización local", fontsize=10)
 
-plot.subplot(2, 3, 5)
-plot.imshow(imagenconCLAHE, cmap="gray")
-plot.title("Imagen con CLAHE", fontsize=10)
-plot.xlabel("clipLimit = 4",  fontsize=8)
+#plot.subplot(2, 3, 5)
+#plot.imshow(imagenconCLAHE, cmap="gray")
+#plot.title("Imagen con CLAHE", fontsize=10)
+#"plot.xlabel("clipLimit = 4",  fontsize=8)
 
 #nj, bins = np.histogram(regionhomogenea.flatten(), bins=256, range=(0, 256))
 #cdf= np.cumsum(nj)
