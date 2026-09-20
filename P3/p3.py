@@ -95,12 +95,12 @@ def reescalaeinterpola(imagen, s, modo):
         fy2= f12 + ((f22 - f12)/d1) * (xc - x1)
         fxy = fy1 + ((fy2 - fy1)/d2) * (yc - y1)
 
-        if (xprima == pixelx and yprima == pixely): 
-            print(f"Valores píxel Bilineal")
-            print(f"Coordenada de salida (y', x'): ({yprima}, {xprima})")
-            print(f"Coordenada en entrada (y, x): ({yc}, {xc})")
-            print(f"Cuatro vecinos: f11={f11}, f12={f12}, f21={f21}, f22={f22}")
-            print(f"Valor interpolado: {fxy}")
+        #if (xprima == pixelx and yprima == pixely): 
+        #    print(f"Valores píxel Bilineal")
+        #    print(f"Coordenada de salida (y', x'): ({yprima}, {xprima})")
+        #    print(f"Coordenada en entrada (y, x): ({yc}, {xc})")
+        #    print(f"Cuatro vecinos: f11={f11}, f12={f12}, f21={f21}, f22={f22}")
+        #    print(f"Valor interpolado: {fxy}")
 
         if fxy < 0:
             return 0
@@ -163,8 +163,8 @@ def reescalaeinterpola(imagen, s, modo):
     return imagensalida
 
 s = 0.5
-#p1 = reescalaeinterpola(imagenrgb, s, "VMC")
-#p2 = reescalaeinterpola(imagenrgb, s, "Bilineal")
+p1 = reescalaeinterpola(imagenrgb, s, "VMC")
+p2 = reescalaeinterpola(imagenrgb, s, "Bilineal")
 p3 = reescalaeinterpola(imagenegrises, s, "VMC")
 p4 = reescalaeinterpola(imagenegrises, s, "Bilineal")
 
