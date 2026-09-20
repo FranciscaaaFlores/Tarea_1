@@ -18,6 +18,8 @@ def reescalaeinterpola(imagen, s, modo):
     #Debemos tratar el caso en que la imagen de entrada sea rgb o este en escala de grises. Sabemos que una imagen RGB esta formada ppor 3 matrices
     #(R, G y B) mientras que las imagenes en escala de grises no poseen estas 3 matrices sino una sola con los valores de intensidad del gris de 0 a 255
     #podemos utilizar .shape para saber cómo es la imagen de entrada.
+    pixelx = 50
+    pixely = 50
 
     altoi = imagen.shape[0]
     anchoi = imagen.shape[1]
@@ -93,6 +95,13 @@ def reescalaeinterpola(imagen, s, modo):
         fy2= f12 + ((f22 - f12)/d1) * (xc - x1)
         fxy = fy1 + ((fy2 - fy1)/d2) * (yc - y1)
 
+        if (xprima == pixelx and yprima == pixely): 
+            print(f"Valores píxel Bilineal")
+            print(f"Coordenada de salida (y', x'): ({yprima}, {xprima})")
+            print(f"Coordenada en entrada (y, x): ({yc}, {xc})")
+            print(f"Cuatro vecinos: f11={f11}, f12={f12}, f21={f21}, f22={f22}")
+            print(f"Valor interpolado: {fxy}")
+
         if fxy < 0:
             return 0
         if fxy > 255:
@@ -153,17 +162,12 @@ def reescalaeinterpola(imagen, s, modo):
 
     return imagensalida
 
-s = 0.8
+s = 0.5
 #p1 = reescalaeinterpola(imagenrgb, s, "VMC")
-#2 = reescalaeinterpola(imagenrgb, s, "Bilineal")
+#p2 = reescalaeinterpola(imagenrgb, s, "Bilineal")
 p3 = reescalaeinterpola(imagenegrises, s, "VMC")
 p4 = reescalaeinterpola(imagenegrises, s, "Bilineal")
-s2 = 0.8
-p5 = reescalaeinterpola(p3, s2, "VMC")
-p6 = reescalaeinterpola(p4, s2, "Bilineal")
-s3 = 0.8
-p7 = reescalaeinterpola(p5, s3, "VMC")
-p8 = reescalaeinterpola(p6, s3, "Bilineal")
+
 plot.figure(figsize=(12,10))
 
 plot.subplot(2, 2, (1,2))
@@ -171,28 +175,28 @@ plot.imshow(imagenegrises, cmap="gray")
 plot.title("Imagen Original")
 
 plot.subplot(2, 2, 3)
-plot.imshow(p7, cmap="gray")
+plot.imshow(p3, cmap="gray")
 plot.title("Imagen en escala de grises, interpolación VMC")
 
 plot.subplot(2, 2, 4)
-plot.imshow(p8, cmap="gray")
+plot.imshow(p4, cmap="gray")
 plot.title("Imagen en escala de grises, interpolación Bilineal")
 plot.subplots_adjust(hspace=0.7)
 plot.tight_layout()
 
 plot.figure(figsize=(12,10))
 
-#plot.subplot(2, 2, (1,2))
-#plot.imshow(imagenrgb)
-#plot.title("Imagen Original")
+plot.subplot(2, 2, (1,2))
+plot.imshow(imagenrgb)
+plot.title("Imagen Original")
 
-#plot.subplot(2, 2, 3)
-#plot.imshow(p1)
-#plot.title("Imagen RGB, interpolación VMC")
+plot.subplot(2, 2, 3)
+plot.imshow(p1)
+plot.title("Imagen RGB, interpolación VMC")
 
-#plot.subplot(2, 2, 4)
-#plot.imshow(p2)
-#plot.title("Imagen RGB, interpolación Bilineal")
+plot.subplot(2, 2, 4)
+plot.imshow(p2)
+plot.title("Imagen RGB, interpolación Bilineal")
 
 plot.subplots_adjust(hspace=0.4)
 plot.tight_layout()
