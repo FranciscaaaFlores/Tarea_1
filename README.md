@@ -19,3 +19,28 @@ Para usarlo se pueden utilizar las imágenes que vienen dentro del código (que 
 
 ### Resultados:
 La salida del código es un Plot con 3 imágenes (Original, Modo HS, Modo CIE L*c*h*). 
+
+
+## P2 (Pregunta 2 — Ecualización local y control de contraste)
+
+En esta pregunta se implementa la función regionesytransformacion(imagen, alto, ancho, sepvertical, sephorizontal, parametro), la cual recibe 6 parámetros:
+1. **"imagen"**: Una imagen en escala de grises.
+2. **"alto"**: El alto de las regiones que se desea crear.
+3. **"ancho"**: El ancho de las regiones que se desea crear.
+4. **"sepvertical"**: La separación vertical que se desea entre regiones. 
+5. **"sephorizontal"**: La separación horizontal que se desea entre regiones. 
+6. **"parametro"**: Para el mecanismo de control de contraste, toma valores entre 0 y 1 (en donde 0 equivale a no aplicar ninguna transformación y 1 a aplicar la transformación completa). Es la proporción en la que se combinan las transformaciones con la identidad.
+ 
+### Cómo usar:
+Para usarlo se pueden utilizar las imágenes que vienen dentro del código (que es el archivo de la T1 o bien una imagen de ski image pasándola a escala de grises). Basta con llamar a la función con los parámetros indicados para reproducir los resultados. 
+
+### Resultados:
+La salida original de este código es un plot con 2 imágenes (Original, ecualizada local). En el caso de la original se detallan sus dimensiones, de manera que es más sencillo visualizar las regiones. En el caso de la ecualizada local se detallan las dimensiones de las regiones, las separación vertical y horizontal, y el valor del parámetro de control de contraste.
+Además, se encuentran comentados otros resultados desarrollados durante la implementación. De esta forma, se puede obtener un plot con 5 imágenes (si se descomentan las últimas subplot, procurando comentar las subplot originales), en las que se encuentran:
+1. Imagen Original
+2. Imagen ecualización global clásica (obtenida si se seleccionan los parámetros como: alto = alto imagen original, ancho =
+   ancho imagen original, sepvertical = alto imagen original, sephorizontal = ancho imagen original, parámetro = 1). 
+4. Imagen con ecualización local (en la que se pueden modificar sus regiones, parámetro = 1)
+5. Imagen con mecanismo de contraste (en la que se pueden modificar sus regiones, parámetro distinto de 1)
+6. Imagen con CLAHE (la tarea mencionaba que se podía usar implementar con fines comparativos únicamente, por lo que
+   solo se usa con este propósito). Se puede modificar su clipLimit y el tamaño de las regiones.
