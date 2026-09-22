@@ -1,4 +1,4 @@
-# T1 - Fundamentos de Procesamiento de Imágenes
+# Tarea 1
 En este repositorios se encuentran 3 carpetas (P1, P2, P3), en las cuales se encuentra un archivo .py que contiene el código con los respectivos comentarios asociados a cada parte y el archivo (imagen) que se subió en canvas para cada pregunta. No se ha realizado la pregunta 4.
 
 Cabe recalcar que los códigos no cuentan con interfaz gráfica, por lo que para modificar los parámetros y llamar a las funciones se encuentran las líneas correspondientes en donde se pueden modificar sus valores. 
